@@ -29,5 +29,5 @@ const bookSchema = new Schema(
     timestamps: true,
   }
 );
-
-module.exports = mongoose.model("book", bookSchema);
+//collection will have a name "books"
+module.exports = mongoose.model("Book", bookSchema);

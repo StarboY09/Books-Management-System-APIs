@@ -1,7 +1,3 @@
-//Data Tranfrom Object
-
-const { models } = require("mongoose");
-
 class IssuedBook {
   _id;
   name;
@@ -13,7 +9,7 @@ class IssuedBook {
   returnDate;
 
   constructor(user) {
-    this._id = user.IssuedBook._id;
+    this._id = user.issuedBook._id;
     this.name = user.issuedBook.name;
     this.genre = user.issuedBook.genre;
     this.price = user.issuedBook.price;

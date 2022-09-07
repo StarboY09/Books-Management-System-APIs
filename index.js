@@ -1,43 +1,36 @@
 const express = require("express");
-
 const dotenv = require("dotenv");
-
-//database connections
-
-const DB = require("./data_connention");
-// //data of user in import  by json type file
-// const { users } = require("./data/users.json");
-
-//import file from folder "Routes"
-const users_router = require("./Routes/users");
-const books_router = require("./Routes/books");
+// database connection
+const DbConnection = require("./data_connention");
+// importing routes
+const usersRouter = require("./routes/users");
+const booksRouter = require("./routes/books");
 
 dotenv.config();
 
 const app = express();
 
-DB();
-const port = 8080;
+DbConnection();
+
+const PORT = 8081;
 
 app.use(express.json());
 
-//using files
-
-app.use("/users", users_router);
-app.use("/books", books_router);
-
 app.get("/", (req, res) => {
   res.status(200).json({
-    message: "server is running",
+    message: "Server is up and running",
   });
 });
+
+app.use("/users", usersRouter);
+app.use("/books", booksRouter);
 
 app.get("*", (req, res) => {
   res.status(404).json({
-    message: "this route does not exist or develop",
+    message: "This route does not exist",
   });
 });
 
-app.listen(port, () => {
-  console.log(`server is running on ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server is running at port ${PORT}`);
 });

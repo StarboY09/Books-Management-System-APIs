@@ -1,71 +1,65 @@
-const { json } = require("express");
 const express = require("express");
-const router = express.Router();
-// its also a way to import thinks but u can use other way too like:line:10
-// const book_model = require("../models/book-modals");
-// const user_model = require("../models/user-modals");
-
-// like this
-
-const { user_model, book_model } = require("../models");
-// u dont have to metions models/index.js becoz index.js is defualt file u can if u want
-
 const { books } = require("../data/books.json");
 const { users } = require("../data/users.json");
 const {
-  getallbooks,
-  getsinglebookbyid,
-  getallissuedbooks,
-  createnewbook,
-  updatebookbyid,
-} = require("../controller/book-controller");
+  getAllBooks,
+  getSingleBookById,
+  getAllIssuedBooks,
+  addNewBook,
+  updateBookById,
+  getSingleBookByName,
+} = require("../controllers/book-controller");
+
+const router = express.Router();
 
 /**
- * Route:/books
+ * Route: /books
  * Method: GET
- * description: get all Books
- * access: public
- * parameters: none
+ * Description: Get all books
+ * Access: Public
+ * Parameters: none
  */
-
-router.get("/", getallbooks);
+router.get("/", getAllBooks);
 
 /**
- * Route:/books/:id
+ * Route: /books/:id
  * Method: GET
- * description: get all books by ids
- * access: public
- * parameters: ids
+ * Description: Get book by id
+ * Access: Public
+ * Parameters: id
  */
-router.get("/:id", getsinglebookbyid);
+router.get("/:id", getSingleBookById);
+
+router.get("/getbook/name/:name", getSingleBookByName);
 
 /**
- * Route:/books
+ * Route: /books/issued/by-user
+ * Method: GET
+ * Description: Get all issued books
+ * Access: Public
+ * Parameters: none
+ */
+router.get("/issued/by-user", getAllIssuedBooks);
+
+/**
+ * Route: /books
  * Method: POST
- * description: create new book
- * access: public
- * parameters: none
+ * Description: Create new book
+ * Access: Public
+ * Parameters: none
+ * Data: author, name, genre, price, publisher, id
  */
-
-router.post("/", createnewbook);
+router.post("/", addNewBook);
 
 /**
- * Route:/books/issued/by-user
- * Method: GET
- * description: Get info about issued books
- * access: public
- * parameters: none
- */
-router.get("/issued/by-user", getallissuedbooks);
-
-/**
- * Route:/books/:id
+ * Route: /books/:id
  * Method: PUT
- * description: Updating a book by a id
- * access: public
- * parameters: id
+ * Description: Update book
+ * Access: Public
+ * Parameters: id
+ * Data: author, name, genre, price, publisher, id
  */
+router.put("/:id", updateBookById);
 
-router.put("/:id", updatebookbyid);
-
+// default export
 module.exports = router;

@@ -18,7 +18,11 @@ const userSchema = new Schema(
     },
     issuedBook: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "book",
+      ref: "Book",
+      required: false,
+    },
+    issuedDate: {
+      type: String,
       required: false,
     },
     returnDate: {
@@ -38,5 +42,5 @@ const userSchema = new Schema(
     timestamps: true,
   }
 );
-
-module.exports = mongoose.model("user", userSchema);
+//collection will have a name "Users"
+module.exports = mongoose.model("User", userSchema);

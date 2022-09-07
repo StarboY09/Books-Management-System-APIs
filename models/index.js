@@ -1,5 +1,4 @@
-const user_model = require("./user-modals");
-const book_model = require("./book-modals");
-const { model } = require("mongoose");
+const UserModel = require("./user-model");
+const BookModel = require("./book-model");
 
-model.exports = { user_model, book_model };
+module.exports = { UserModel, BookModel };

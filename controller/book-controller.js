@@ -1,45 +1,80 @@
-const { user_model, book_model } = require("../models");
 const IssuedBook = require("../dtos/book-dto");
+const { BookModel, UserModel } = require("../models");
 
-exports.getallbooks = async (req, res) => {
-  const books = await book_model.find();
+exports.getAllBooks = async (req, res) => {
+  const books = await BookModel.find();
 
   if (books.length === 0)
-    return res.status(404).json({ succes: false, message: "books not found" });
-  res.status(200).json({ succes: true, data: books });
-};
-
-exports.getsinglebookbyid = async (req, res) => {
-  const { id } = req.params;
-  const book = await book_model.findById(id);
-
-  if (!book) {
     return res.status(404).json({
       success: false,
-      message: "books not found by id",
+      message: "No book found",
     });
-  }
 
-  return res.status(200).json({ success: true, data: book });
+  res.status(200).json({
+    success: true,
+    data: books,
+  });
 };
 
-exports.getallissuedbooks = async (req, res) => {
-  const users = await user_model
-    .find({
-      issuedBook: { $exists: true }, // u can also this way like a spec this like categore:"plant" so it will find or give things having categore of plant
-    })
-    .populate("issuedBook");
+exports.getSingleBookById = async (req, res) => {
+  const { id } = req.params;
 
-  const issued_book_by_user = users.map((each) => new IssuedBook(each));
+  const book = await BookModel.findById(id);
 
-  if (issued_book_by_user.length === 0)
-    return res.status(404).json({ success: false, message: "No issued books" });
+  if (!book)
+    return res.status(404).json({
+      success: false,
+      message: "Book not found",
+    });
 
-  return res.status(200).json({ success: true, data: issued_book_by_user });
+  return res.status(200).json({
+    success: true,
+    data: book,
+  });
 };
-// one way of doing it
-// module.exports={getallbooks,getsinglebookbyid}
-exports.createnewbook = async (req, res) => {
+
+// Additional route
+exports.getSingleBookByName = async (req, res) => {
+  const { name } = req.params;
+
+  console.log(name);
+
+  const book = await BookModel.findOne({
+    name: name,
+  });
+
+  if (!book)
+    return res.status(404).json({
+      success: false,
+      message: "Book not found",
+    });
+
+  return res.status(200).json({
+    success: true,
+    data: book,
+  });
+};
+
+exports.getAllIssuedBooks = async (req, res) => {
+  const users = await UserModel.find({
+    issuedBook: { $exists: true },
+  }).populate("issuedBook");
+
+  const issuedBooks = users.map((each) => new IssuedBook(each));
+
+  if (issuedBooks.length === 0)
+    return res.status(404).json({
+      success: false,
+      message: "No books issued yet",
+    });
+
+  return res.status(200).json({
+    success: true,
+    data: issuedBooks,
+  });
+};
+
+exports.addNewBook = async (req, res) => {
   const { data } = req.body;
 
   if (!data) {
@@ -49,9 +84,9 @@ exports.createnewbook = async (req, res) => {
     });
   }
 
-  await book_model.create(data);
+  await BookModel.create(data);
 
-  const allBooks = await book_model.find();
+  const allBooks = await BookModel.find();
 
   return res.status(201).json({
     success: true,
@@ -59,11 +94,11 @@ exports.createnewbook = async (req, res) => {
   });
 };
 
-exports.updatebookbyid = async (req, res) => {
+exports.updateBookById = async (req, res) => {
   const { id } = req.params;
   const { data } = req.body;
 
-  const updatebook = await book_model.findOneAndUpdate(
+  const updatedBook = await BookModel.findOneAndUpdate(
     {
       _id: id,
     },
@@ -73,5 +108,8 @@ exports.updatebookbyid = async (req, res) => {
     }
   );
 
-  return res.status(200).json({ success: true, data: updatebook });
+  return res.status(200).json({
+    success: true,
+    data: updatedBook,
+  });
 };
